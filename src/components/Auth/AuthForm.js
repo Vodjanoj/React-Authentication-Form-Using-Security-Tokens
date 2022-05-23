@@ -1,9 +1,11 @@
 import { useState, useRef, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
+  const history = useHistory();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -63,7 +65,8 @@ const AuthForm = () => {
       .then((data) => {
         // sign up or sign in succeeded, I know that this user is authenticated now.
         // And I know that we'll have this token because Firebase returns us this token on this iDtoken field in the response object.
-        authCtx.login(data.idToken)
+        authCtx.login(data.idToken);
+        history.replace("/");
       })
       .catch((err) => {
         alert(err.message);
