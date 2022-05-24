@@ -63,9 +63,16 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
+        // calculating a new date in milliseconds plus +data.expiresIn from firebase converted to number and
+        // * 1000 to convert it to milliseconds, and (new Date().getTime()+ (+data.expiresIn * 1000)) then is added together
+        // and passed to new date again to construct a new date object from that timestamp in milliseconds.
+        // This should then be the expiration time as a date object
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        );
         // sign up or sign in succeeded, I know that this user is authenticated now.
         // And I know that we'll have this token because Firebase returns us this token on this iDtoken field in the response object.
-        authCtx.login(data.idToken);
+        authCtx.login(data.idToken, expirationTime.toISOString());
         history.replace("/");
       })
       .catch((err) => {
